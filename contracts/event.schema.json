@@ -1,27 +1,16 @@
 {
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "领域事件信封",
   "type": "object",
-  "required": [
-    "event_id",
-    "kind",
-    "occurred_at",
-    "subject_id",
-    "version"
-  ],
+  "required": ["event_id", "kind", "occurred_at", "subject_id", "version"],
   "properties": {
-    "event_id": {
-      "type": "string"
-    },
-    "kind": {
-      "type": "string"
-    },
-    "occurred_at": {
-      "type": "string"
-    },
-    "subject_id": {
-      "type": "string"
-    },
-    "version": {
-      "type": "integer"
-    }
-  }
+    "event_id": { "type": "string", "description": "全局幂等标识，断网重发/重试不产生重复事件" },
+    "kind": { "type": "string", "description": "事件类型，如 SLOT_RESERVED、CONSENT_WITHDRAWN" },
+    "occurred_at": { "type": "string", "format": "date-time", "description": "业务发生时间（带时区），乱序到达时按此折叠" },
+    "subject_id": { "type": "string", "description": "聚合主体流标识，如 site:S01、child:C01" },
+    "version": { "type": "integer", "minimum": 1, "description": "主体流内单调版本号，乐观并发依据" },
+    "rule_version": { "type": ["integer", "null"], "description": "本决定基于的规则版本，供名额/照护/整改结论溯源" },
+    "payload": { "type": "object", "description": "事件内容，事件追加后不可变" }
+  },
+  "additionalProperties": false
 }
